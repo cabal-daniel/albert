@@ -112,7 +112,10 @@ class RaceProcessor(object):
       cur_path = os.path.join(cur_dir, "all.txt")
       with tf.gfile.Open(cur_path) as f:
         for line in f:
-          cur_data = json.loads(line.strip())
+          try:
+            cur_data = json.loads(line.strip())
+          except Exception:
+            continue
 
           answers = cur_data["answers"]
           options = cur_data["options"]
@@ -231,7 +234,6 @@ def convert_single_example(example_index, example, label_size, max_seq_length,
       for choice_idx, (tokens, input_ids, input_mask, segment_ids) in \
            enumerate(zip(all_input_tokens, all_input_ids, all_input_mask, all_segment_ids)):
         tf.logging.info("choice: {}".format(choice_idx))
-        tf.logging.info("tokens: {}".format(" ".join(tokens)))
         tf.logging.info(
             "input_ids: {}".format(" ".join(map(str, input_ids))))
         tf.logging.info(
